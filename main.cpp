@@ -14,6 +14,15 @@ using std::string;          using std::vector;
 using std::priority_queue;  using std::unordered_map;
 using std::unordered_set;   using std::cin;
 
+void split(const string& str, char delim, vector<string>& output) {
+    stringstream ss;
+    ss << str;
+    string item;
+    while (getline(ss, item, delim)) {
+        output.emplace_back(item);
+    }
+}
+
 int main() {
     // a quick working directory fix to allow for easier filename inputs
     auto path = std::filesystem::current_path() / "res/";
@@ -41,13 +50,35 @@ int main() {
         and append that vector to outputLadders.
     */
     // Write code here
+    WikiScraper wikiscraper;
+    ifstream myfile (path.string() + filename);
+    if (myfile.is_open()){
+        string line;
+        int no = 0;
+        while ( getline (myfile, line) ){
+            if (no == 0) {
+                no++;
+                continue;
+            }
+            // cout << line << '\n';
+            vector<string> pair;
+            split(line, ' ', pair);
+            string start_page = pair.at(0);
+            string end_page = pair.at(1);
+            // cout << start_page << '\n';
+            // cout << end_page << '\n';
+            vector<string> vec = wikiscraper.findWikiLadder(start_page, end_page);
+            outputLadders.push_back(vec);
+        }
+        myfile.close();
+    }
 
     /*
      * Print out all ladders in outputLadders.
      * We've already implemented this for you!
      */
     // Write code here
-
+    
     return 0;
 }
 
