@@ -50,35 +50,37 @@ int main() {
         and append that vector to outputLadders.
     */
     // Write code here
-    WikiScraper wikiscraper;
     ifstream myfile (path.string() + filename);
-    if (myfile.is_open()){
-        string line;
-        int no = 0;
-        while ( getline (myfile, line) ){
-            if (no == 0) {
-                no++;
-                continue;
-            }
-            // cout << line << '\n';
-            vector<string> pair;
-            split(line, ' ', pair);
-            string start_page = pair.at(0);
-            string end_page = pair.at(1);
-            // cout << start_page << '\n';
-            // cout << end_page << '\n';
-            vector<string> vec = wikiscraper.findWikiLadder(start_page, end_page);
-            outputLadders.push_back(vec);
-        }
-        myfile.close();
-    }
+    int numPairs;
+    // parse the first line as the number of tokens
+    myfile >> numPairs;
 
+    // loop through each line, parsing out page names and calling findWikiLadder
+    string startPage, endPage;
+    for (int i = 0; i < numPairs; i++) {
+        // parse the start and end page from each line
+        myfile >> startPage >> endPage;
+        outputLadders.push_back(findWikiLadder(startPage, endPage));
+    }
     /*
      * Print out all ladders in outputLadders.
      * We've already implemented this for you!
      */
     // Write code here
-    
+    for (auto& ladder : outputLadders) {
+        if (ladder.empty()) {
+            cout << "No ladder found!" << endl;                
+        } else {
+                        /*
+             * The above is an alternate way to print to cout using the
+             * STL algorithms library and iterators. This is equivalent to:
+             */
+            for (size_t i = 0; i < ladder.size() - 1; ++i) {
+                cout << ladder[i] << ", ";
+            }
+            cout << ladder.back() << "}" << endl;
+        }
+    }
     return 0;
 }
 
